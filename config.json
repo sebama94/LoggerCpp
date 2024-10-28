@@ -1,0 +1,19 @@
+{
+    "logLevel": "DEBUG",
+    "sinks": [
+        {
+            "type": "console", 
+            "level": "INFO"
+        },
+        {
+            "type": "file",
+            "level": "DEBUG",
+            "filename": "test_logs.txt"
+        },
+        {
+            "type": "file",
+            "level": "ERROR", 
+            "filename": "error_logs.txt"
+        }
+    ]
+}
