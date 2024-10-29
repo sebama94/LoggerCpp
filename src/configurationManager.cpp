@@ -1,5 +1,9 @@
-#include "configurationManager.hpp"
-#include "logSink.hpp"
+#include "loggerCpp/configurationManager.hpp"
+#include "loggerCpp/consoleLogSink.hpp"
+#include "loggerCpp/fileLogSink.hpp"
+#include "loggerCpp/dataBaseLogSink.hpp"
+#include "loggerCpp/networkLogSink.hpp"
+
 #include <fstream>
 #include <expected>
 

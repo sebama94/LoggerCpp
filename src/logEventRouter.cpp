@@ -1,5 +1,5 @@
-#include "logEventRouter.hpp"
-#include "logSink.hpp"
+#include "loggerCpp/logEventRouter.hpp"
+#include "loggerCpp/logSink.hpp"
 
 // Remove unnecessary constructor/destructor since we use =default in header
 void LogEventRouter::setLogLevel(utils::LogLevel level) noexcept {

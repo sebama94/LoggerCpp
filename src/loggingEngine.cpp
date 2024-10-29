@@ -1,9 +1,10 @@
 // LoggingEngine.cpp
 
-#include "loggingEngine.hpp"
+#include "loggerCpp/loggingEngine.hpp"
 #include <memory>
 #include <latch>
 #include <semaphore>
+
 
 LoggingEngine& LoggingEngine::getInstance() noexcept {
     static LoggingEngine instance;
@@ -50,10 +51,7 @@ void LoggingEngine::processEvent(const utils::LogEvent& event) noexcept {
     }
 }
 
-void LoggingEngine::log(utils::LogLevel level, const std::string& message, const std::source_location& location) noexcept {
-    utils::LogEvent event{level, message, location};
-    processEvent(std::move(event));
-}
+
 
 void LoggingEngine::startAsync() noexcept {
     std::lock_guard lock(queueMutex);

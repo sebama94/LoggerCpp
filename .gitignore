@@ -58,3 +58,6 @@ vscode-debug/
 vscode-release/
 vscode-profile/
 vscode
+
+*.log
+*.txt

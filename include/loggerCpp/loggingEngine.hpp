@@ -2,6 +2,7 @@
 
 #include "utils.hpp"
 #include "logSink.hpp"
+#include <fmt/format.h>
 #include <memory>
 #include <mutex>
 #include <vector>
@@ -10,13 +11,15 @@
 #include <condition_variable>
 #include <latch>
 #include <semaphore>
+#include <source_location>
+
 
 // Logger Macros for convenient logging with [[likely]] hints for hot paths
-#define LOG_DEBUG(msg) [[unlikely]] LoggingEngine::getInstance().log(utils::LogLevel::DEBUG, msg, std::source_location::current()) 
-#define LOG_INFO(msg) [[likely]] LoggingEngine::getInstance().log(utils::LogLevel::INFO, msg, std::source_location::current())
-#define LOG_WARN(msg) [[unlikely]] LoggingEngine::getInstance().log(utils::LogLevel::WARNING, msg, std::source_location::current())
-#define LOG_ERROR(msg) [[unlikely]] LoggingEngine::getInstance().log(utils::LogLevel::ERROR, msg, std::source_location::current())
-#define LOG_CRITICAL(msg) [[unlikely]] LoggingEngine::getInstance().log(utils::LogLevel::CRITICAL, msg, std::source_location::current())
+#define LOG_DEBUG(msg, ...) [[unlikely]] LoggingEngine::getInstance().log(utils::LogLevel::DEBUG, std::source_location::current(), fmt::format(msg, ##__VA_ARGS__))
+#define LOG_INFO(msg, ...) [[likely]] LoggingEngine::getInstance().log(utils::LogLevel::INFO, std::source_location::current(), fmt::format(msg, ##__VA_ARGS__))
+#define LOG_WARN(msg, ...) [[unlikely]] LoggingEngine::getInstance().log(utils::LogLevel::WARNING, std::source_location::current(), fmt::format(msg, ##__VA_ARGS__))
+#define LOG_ERROR(msg, ...) [[unlikely]] LoggingEngine::getInstance().log(utils::LogLevel::ERROR, std::source_location::current(), fmt::format(msg, ##__VA_ARGS__))
+#define LOG_CRITICAL(msg, ...) [[unlikely]] LoggingEngine::getInstance().log(utils::LogLevel::CRITICAL, std::source_location::current(), fmt::format(msg, ##__VA_ARGS__))
 
 class LoggingEngine {
 public:
@@ -26,7 +29,13 @@ public:
     void setLogLevel(utils::LogLevel level) noexcept;
     void addSink(std::shared_ptr<LogSink> sink, utils::LogLevel level);
     void processEvent(const utils::LogEvent& event) noexcept;
-    void log(utils::LogLevel level, const std::string& message, const std::source_location& location) noexcept;
+    template<typename... Args>
+    void log(utils::LogLevel level, const std::source_location& location, const std::string& fmt, Args&&... args) noexcept {
+        std::string formattedMessage = fmt::vformat(fmt, fmt::make_format_args(std::forward<Args>(args)...));
+        utils::LogEvent event{level, formattedMessage, location};
+        processEvent(std::move(event));
+    }
+
 
     void startAsync() noexcept;
     void stopAsync() noexcept;
