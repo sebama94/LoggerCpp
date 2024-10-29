@@ -3,6 +3,7 @@
 #include <string_view>
 #include <nlohmann/json.hpp>
 #include "loggingEngine.hpp"
+#include <fmt/core.h>
 
 using json = nlohmann::json;
 

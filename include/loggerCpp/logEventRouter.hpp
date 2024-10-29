@@ -23,7 +23,7 @@ public:
     // Core functionality with [[nodiscard]] to prevent accidental value drops
     void addRoute(utils::LogLevel level, std::shared_ptr<LogSink> sink) noexcept;
     void setLogLevel(utils::LogLevel level) noexcept;
-    void routeEvent(const utils::LogEvent& message) noexcept;
+    void routeEvent(const utils::LogEvent& event) noexcept;
 
 private:
     // Align data for cache-friendly access

@@ -1,10 +1,11 @@
-#include "configurationManager.hpp"
+#include "loggerCpp/configurationManager.hpp"
 #include <csignal>
 #include <memory>
 #include <chrono>
 #include <thread>
 #include <filesystem>
 #include <stdexcept>
+
 
 namespace {
     // Global ConfigurationManager instance
@@ -21,12 +22,12 @@ namespace {
                 signal_name = "SIGINT";
                 break;
             default:
-                LOG_ERROR("Received unknown signal " + std::to_string(signum) + ". Exiting...");
+                LOG_ERROR("Received unknown signal {}", signum);
                 g_configManager.reset();
                 std::exit(signum);
         }
         
-        LOG_INFO("Received " + std::string(signal_name) + " signal. Performing cleanup...");
+        LOG_INFO("Received {} signal. Performing cleanup...", signal_name);
         g_configManager.reset();
         std::exit(signum);
     }
@@ -52,9 +53,10 @@ int main() {
         LOG_DEBUG("Initializing application...");
         LOG_INFO("Application started successfully");
         
-
-        LOG_WARN("Processing time exceeded 10 seconds");
-        LOG_ERROR("Failed to complete all tasks in time");
+        int a = 10;
+        LOG_WARN("Processing time exceeded 10 seconds: {}", a);
+        std::vector<int> vec = {1, 2, 3, 4, 5};
+        LOG_ERROR("Failed to complete all tasks in time: {}", fmt::join(vec.begin(), vec.end(), ", "));
         LOG_CRITICAL("System resources critically low");
         
         // Clean up before exiting
@@ -63,7 +65,7 @@ int main() {
         return EXIT_SUCCESS;
     }
     catch (const std::exception& e) {
-        LOG_CRITICAL("Fatal error: " + std::string(e.what()));
+        std::cerr << "Fatal error: " << e.what() << std::endl;
         return EXIT_FAILURE;
     }
 }

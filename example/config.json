@@ -1,5 +1,5 @@
 {
-    "logLevel": "DEBUG",
+    "logLevel": "INFO",
     "sinks": [
         {
             "type": "console", 
@@ -8,12 +8,12 @@
         {
             "type": "file",
             "level": "DEBUG",
-            "filename": "test_logs.txt"
+            "filename": "test_logs.log"
         },
         {
             "type": "file",
             "level": "ERROR", 
-            "filename": "error_logs.txt"
+            "filename": "error_logs.log"
         }
     ]
 }
