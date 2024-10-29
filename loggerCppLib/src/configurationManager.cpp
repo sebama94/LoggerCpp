@@ -1,48 +1,55 @@
 #include "configurationManager.hpp"
 #include "logSink.hpp"
+#include <fstream>
+#include <expected>
 
-ConfigurationManager::ConfigurationManager(const std::string& configFilePath) : configFilePath(configFilePath) {
-    std::ifstream file(configFilePath);
-    if (!file.is_open()) {
+ConfigurationManager::ConfigurationManager(std::string_view configFilePath) : configFilePath(configFilePath) {
+    std::ifstream file(std::string(configFilePath), std::ios::binary); // Binary mode for faster reading
+    if (!file.is_open()) [[unlikely]] {
         throw std::runtime_error("Failed to open configuration file");
     }
-    config = json::parse(file);
+    
+    // Pre-allocate buffer for faster parsing
+    file.seekg(0, std::ios::end);
+    const auto size = file.tellg();
+    file.seekg(0);
+    std::string buffer(size, '\0');
+    file.read(buffer.data(), size);
+    
+    config = json::parse(buffer, nullptr, false, true); // Allow comments, faster parsing
     LoggingEngine& logger = LoggingEngine::getInstance();
     applyConfiguration(logger);
 }
 
 void ConfigurationManager::applyConfiguration(LoggingEngine& logger) {
-    if (config.is_null()) {
+    if (config.is_null()) [[unlikely]] {
         throw std::runtime_error("Configuration is null");
     }
 
     // Set log level
-    if (config.contains("logLevel")) {
-        std::string logLevelStr = config["logLevel"].get<std::string>();
+    if (const auto it = config.find("logLevel"); it != config.end()) {
+        const auto logLevelStr = it->get<std::string>();
         utils::LogLevel level = utils::stringToLogLevel(logLevelStr);
         logger.setLogLevel(level);
     }
 
     // Set sinks
-    if (config.contains("sinks")) {
-        for (const auto& sink : config["sinks"]) {
-            std::string type = sink["type"].get<std::string>();
-            std::string levelStr = sink["level"].get<std::string>();
+    if (const auto it = config.find("sinks"); it != config.end()) {
+        const auto& sinks = *it;
+        for (const auto& sink : sinks) {
+            const auto type = sink["type"].get<std::string>();
+            const auto levelStr = sink["level"].get<std::string>();
             
             utils::LogLevel level = utils::stringToLogLevel(levelStr);
 
-            if (type == "console") {
+            if (type == "console") [[likely]] {
                 logger.addSink(std::make_shared<ConsoleLogSink>(), level);
             } else if (type == "file") {
-                std::string filename = sink["filename"].get<std::string>();
+                const auto filename = sink["filename"].get<std::string>();
                 logger.addSink(std::make_shared<FileLogSink>(filename), level);
-            } else {
+            } else [[unlikely]] {
                 throw std::runtime_error("Invalid sink type in configuration");
             }
         }
     }
-}
-
-ConfigurationManager::~ConfigurationManager() {
-    //LoggingEngine::resetInstance();
 }
