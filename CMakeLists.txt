@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.25)
 project(loggerCpp VERSION 1.0.0 LANGUAGES CXX)
 
 # Set C++23 standard
