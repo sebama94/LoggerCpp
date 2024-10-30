@@ -25,8 +25,14 @@ namespace utils {
         ERROR,
         CRITICAL,
         TRACE,
-        ALL,
         NONE
+    };
+
+    enum class SinkType {
+        CONSOLE,
+        FILE,
+        NETWORK,
+        DATABASE
     };
 
     static std::string getColorForLogLevel(LogLevel level) {
@@ -51,10 +57,8 @@ namespace utils {
             case LogLevel::ERROR: return "ERROR";
             case LogLevel::CRITICAL: return "CRITICAL";
             case LogLevel::TRACE: return "TRACE";
-            case LogLevel::ALL: return "ALL";   
-            case LogLevel::NONE: return "NONE";
+            default: return "NONE";
         }   
-        return std::string();
     };
 
     static LogLevel stringToLogLevel(const std::string& levelString) noexcept
@@ -66,10 +70,7 @@ namespace utils {
         if (levelString == "ERROR") return LogLevel::ERROR;
         if (levelString == "CRITICAL") return LogLevel::CRITICAL;
         if (levelString == "TRACE") return LogLevel::TRACE;
-        if (levelString == "ALL") return LogLevel::ALL;
-        if (levelString == "NONE") return LogLevel::NONE;
         return LogLevel::NONE;
-        
     }
 
     struct LogEvent {

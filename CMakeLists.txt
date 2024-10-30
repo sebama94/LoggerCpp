@@ -9,20 +9,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Set optimization flags
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 
-# Try to find nlohmann/json package first
-find_package(nlohmann_json QUIET)
-
-if(NOT nlohmann_json_FOUND)
-    # If not found, fetch from GitHub
-    include(FetchContent)
-    FetchContent_Declare(
-        json
-        GIT_REPOSITORY https://github.com/nlohmann/json.git
-        GIT_TAG v3.11.3  # Specify the version you want to use
-    )
-    FetchContent_MakeAvailable(json)
-endif()
-
 # Try to find fmt package first
 find_package(fmt QUIET)
 
@@ -73,6 +59,5 @@ target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_23)
 
 # Link nlohmann/json and fmt
 target_link_libraries(${PROJECT_NAME} 
-    nlohmann_json::nlohmann_json
     fmt::fmt
 )

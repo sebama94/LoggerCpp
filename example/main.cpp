@@ -8,9 +8,6 @@
 
 
 namespace {
-    // Global ConfigurationManager instance
-    std::unique_ptr<ConfigurationManager> g_configManager;
-
     // Signal handler function
     void signalHandler(int signum) {
         const char* signal_name = nullptr;
@@ -23,49 +20,46 @@ namespace {
                 break;
             default:
                 LOG_ERROR("Received unknown signal {}", signum);
-                g_configManager.reset();
                 std::exit(signum);
         }
         
         LOG_INFO("Received {} signal. Performing cleanup...", signal_name);
-        g_configManager.reset();
         std::exit(signum);
     }
 }
 
 int main() {
+   //std::unique_ptr<ConfigurationManager> g_configManager;
     try {
         // Register signal handlers using std::signal for better type safety
         std::signal(SIGTERM, signalHandler);
         std::signal(SIGINT, signalHandler);
         
-        const std::filesystem::path config_path = std::filesystem::current_path() / "config.json";
-        
-        // Verify config file exists before attempting to load
-        if (!std::filesystem::exists(config_path)) {
-            throw std::runtime_error("Configuration file not found: " + config_path.string());
-        }
-        
         // Initialize ConfigurationManager with the path to the JSON config file
-        g_configManager = std::make_unique<ConfigurationManager>(config_path.string());
+        ConfigurationManager configManager(utils::LogLevel::DEBUG); 
+       // g_configManager = std::make_unique<ConfigurationManager>(utils::LogLevel::DEBUG);
+
+        configManager.applyConsoleSink(utils::LogLevel::DEBUG);
+        configManager.applyFileSink(utils::LogLevel::INFO, "log.log");
         
         // Sample log messages demonstrating all log levels
         LOG_DEBUG("Initializing application...");
         LOG_INFO("Application started successfully");
-        
+        // Add a small delay to simulate processing
+        std::this_thread::sleep_for(std::chrono::seconds(5));
         int a = 10;
         LOG_WARN("Processing time exceeded 10 seconds: {}", a);
         std::vector<int> vec = {1, 2, 3, 4, 5};
         LOG_ERROR("Failed to complete all tasks in time: {}", fmt::join(vec.begin(), vec.end(), ", "));
         LOG_CRITICAL("System resources critically low");
-        
+
         // Clean up before exiting
-        g_configManager.reset();
-        
+    
         return EXIT_SUCCESS;
     }
     catch (const std::exception& e) {
         std::cerr << "Fatal error: " << e.what() << std::endl;
+       // g_configManager.reset();
         return EXIT_FAILURE;
     }
 }

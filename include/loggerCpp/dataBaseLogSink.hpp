@@ -4,8 +4,8 @@
 
 
 // Database output sink
-class DatabaseLogSink final : public LogSink {
+class DataBaseLogSink final : public LogSink {
 public:
-    DatabaseLogSink() noexcept = default;
+    DataBaseLogSink() noexcept = default;
     void write(const utils::LogEvent& event) override;
 };
