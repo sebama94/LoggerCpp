@@ -53,30 +53,61 @@ public:
     explicit ConfigurationManager(utils::LogLevel logLevel);
 
     /**
-     * @brief Configures and adds a console sink to the logger
-     * @param level The minimum log level for messages to be written to console
+     * @brief Configures and adds multiple console sinks to the logger
+     * @param level1 First log level
+     * @param level2 Second log level
+     * @param level3 Third log level (optional)
+     * @param level4 Fourth log level (optional)
+     * @throws std::runtime_error if sink creation fails
      */
-    void applyConsoleSink(const utils::LogLevel& level);
+    void applyConsoleSink(const utils::LogLevel level);
+    [[maybe_unused]] void applyConsoleSink(const utils::LogLevel level1, const utils::LogLevel level2);
+    [[maybe_unused]] void applyConsoleSink(const utils::LogLevel level1, const utils::LogLevel level2, const utils::LogLevel level3);
+    [[maybe_unused]] void applyConsoleSink(const utils::LogLevel level1, const utils::LogLevel level2, const utils::LogLevel level3, const utils::LogLevel level4);
+    [[maybe_unused]] void applyConsoleSink(const utils::LogLevel level1, const utils::LogLevel level2, const utils::LogLevel level3, const utils::LogLevel level4, const utils::LogLevel level5);
 
     /**
-     * @brief Configures and adds a file sink to the logger
-     * @param level The minimum log level for messages to be written to file
+     * @brief Configures and adds multiple file sinks to the logger
      * @param filename The path and name of the log file
+     * @param level1 First log level
+     * @param level2 Second log level
+     * @param level3 Third log level (optional)
+     * @param level4 Fourth log level (optional)
+     * @throws std::runtime_error if file cannot be opened or sink creation fails
      */
-    void applyFileSink(const utils::LogLevel& level, const std::string_view& filename);
+    void applyFileSink(const utils::LogLevel level, const std::string_view& filename);
+    [[maybe_unused]] void applyFileSink(const utils::LogLevel level1, const utils::LogLevel level2, const std::string_view& filename);
+    [[maybe_unused]] void applyFileSink(const utils::LogLevel level1, const utils::LogLevel level2, const utils::LogLevel level3, const std::string_view& filename);
+    [[maybe_unused]] void applyFileSink(const utils::LogLevel level1, const utils::LogLevel level2, const utils::LogLevel level3, const utils::LogLevel level4, const std::string_view& filename);
+    [[maybe_unused]] void applyFileSink(const utils::LogLevel level1, const utils::LogLevel level2, const utils::LogLevel level3, const utils::LogLevel level4, const utils::LogLevel level5, const std::string_view& filename);
 
     /**
-     * @brief Configures and adds a network sink to the logger
-     * @param level The minimum log level for messages to be sent over network
+     * @brief Configures and adds multiple network sinks to the logger
      * @param url The destination URL for network logging
+     * @param level1 First log level
+     * @param level2 Second log level
+     * @param level3 Third log level (optional)
+     * @param level4 Fourth log level (optional)
+     * @throws std::runtime_error if network connection fails or sink creation fails
      */
-    void applyNetworkSink(const utils::LogLevel& level, const std::string_view& url);
+    void applyNetworkSink(const utils::LogLevel level, const std::string_view& url);
+    [[maybe_unused]] void applyNetworkSink(const utils::LogLevel level1, const utils::LogLevel level2, const std::string_view& url);
+    [[maybe_unused]] void applyNetworkSink(const utils::LogLevel level1, const utils::LogLevel level2, const utils::LogLevel level3, const std::string_view& url);
+    [[maybe_unused]] void applyNetworkSink(const utils::LogLevel level1, const utils::LogLevel level2, const utils::LogLevel level3, const utils::LogLevel level4, const std::string_view& url);
+    [[maybe_unused]] void applyNetworkSink(const utils::LogLevel level1, const utils::LogLevel level2, const utils::LogLevel level3, const utils::LogLevel level4, const utils::LogLevel level5, const std::string_view& url);
 
     /**
-     * @brief Configures and adds a database sink to the logger
-     * @param level The minimum log level for messages to be stored in database
-     * @param database The database connection string or identifier
+     * @brief Configures and adds multiple database sinks to the logger
+     * @param database The database connection string
+     * @param level1 First log level
+     * @param level2 Second log level
+     * @param level3 Third log level (optional)
+     * @param level4 Fourth log level (optional)
+     * @throws std::runtime_error if database connection fails or sink creation fails
      */
-    void applyDataBaseSink(const utils::LogLevel& level, const std::string_view& database);
-
+    void applyDataBaseSink(const utils::LogLevel level, const std::string_view& database);
+    [[maybe_unused]] void applyDataBaseSink(const utils::LogLevel level1, const utils::LogLevel level2, const std::string_view& database);
+    [[maybe_unused]] void applyDataBaseSink(const utils::LogLevel level1, const utils::LogLevel level2, const utils::LogLevel level3, const std::string_view& database);
+    [[maybe_unused]] void applyDataBaseSink(const utils::LogLevel level1, const utils::LogLevel level2, const utils::LogLevel level3, const utils::LogLevel level4, const std::string_view& database);
+    [[maybe_unused]] void applyDataBaseSink(const utils::LogLevel level1, const utils::LogLevel level2, const utils::LogLevel level3, const utils::LogLevel level4, const utils::LogLevel level5, const std::string_view& database);
 };

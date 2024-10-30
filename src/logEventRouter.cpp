@@ -7,7 +7,7 @@ void LogEventRouter::setLogLevel(utils::LogLevel level) noexcept {
 }
 
 void LogEventRouter::addRoute(utils::LogLevel level, std::shared_ptr<LogSink> sink) noexcept {
-    routes[level] = std::move(sink);
+    routes[level].push_back(std::move(sink));
 }
 
 void LogEventRouter::routeEvent(const utils::LogEvent& event) noexcept {
@@ -15,7 +15,9 @@ void LogEventRouter::routeEvent(const utils::LogEvent& event) noexcept {
     if (event.level >= currentLogLevel) [[likely]] {
         // Use contains() for cleaner check (C++23)
         if (routes.contains(event.level)) [[likely]] {
-            routes[event.level]->write(event);
+            for (const auto& sink : routes[event.level]) {
+                sink->write(event);
+            }
         }
     }
 }

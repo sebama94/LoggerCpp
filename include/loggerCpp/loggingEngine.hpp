@@ -12,51 +12,11 @@
 #include <latch>
 #include <semaphore>
 #include <source_location>
+#include "logEventRouter.hpp"
 
-/**
- * @file loggingEngine.hpp
- * @brief Core logging engine implementation providing logging functionality
- */
 
-/**
- * @def LOG_DEBUG(msg, ...)
- * @brief Macro for logging a debug message
- * @param msg The message to log
- * @param ... The arguments to format into the message
- */
-#define LOG_DEBUG(msg, ...) [[unlikely]] LoggingEngine::getInstance().log(utils::LogLevel::DEBUG, std::source_location::current(), fmt::format(msg, ##__VA_ARGS__))
 
-/**
- * @def LOG_INFO(msg, ...)
- * @brief Macro for logging an info message
- * @param msg The message to log
- * @param ... The arguments to format into the message
- */
-#define LOG_INFO(msg, ...) [[unlikely]] LoggingEngine::getInstance().log(utils::LogLevel::INFO, std::source_location::current(), fmt::format(msg, ##__VA_ARGS__))
 
-/**
- * @def LOG_WARN(msg, ...)
- * @brief Macro for logging a warning message
- * @param msg The message to log
- * @param ... The arguments to format into the message
- */
-#define LOG_WARN(msg, ...) [[unlikely]] LoggingEngine::getInstance().log(utils::LogLevel::WARNING, std::source_location::current(), fmt::format(msg, ##__VA_ARGS__))
-
-/**
- * @def LOG_ERROR(msg, ...)
- * @brief Macro for logging an error message
- * @param msg The message to log
- * @param ... The arguments to format into the message
- */
-#define LOG_ERROR(msg, ...) [[unlikely]] LoggingEngine::getInstance().log(utils::LogLevel::ERROR, std::source_location::current(), fmt::format(msg, ##__VA_ARGS__))
-
-/**
- * @def LOG_CRITICAL(msg, ...)
- * @brief Macro for logging a critical message
- * @param msg The message to log
- * @param ... The arguments to format into the message
- */
-#define LOG_CRITICAL(msg, ...) [[unlikely]] LoggingEngine::getInstance().log(utils::LogLevel::CRITICAL, std::source_location::current(), fmt::format(msg, ##__VA_ARGS__))
 
 /**
  * @class LoggingEngine
@@ -76,11 +36,6 @@ public:
      * @return Reference to the singleton LoggingEngine instance
      */
     [[nodiscard]] static LoggingEngine& getInstance() noexcept;
-
-    /**
-     * @brief Reset the singleton instance of LoggingEngine
-     */
-    static void resetInstance() noexcept;
     
     /**
      * @brief Set the global log level for the logger
@@ -153,8 +108,8 @@ private:
      * @param sinkLevel Log level of the sink
      * @return true if event should be logged, false otherwise
      */
-    [[nodiscard]] constexpr bool shouldLog(utils::LogLevel eventLevel, utils::LogLevel sinkLevel) const noexcept;
 
+    alignas(64) LogEventRouter router;                                                       ///< Event router for log messages
     alignas(64) utils::LogLevel globalLogLevel;                                              ///< Global minimum log level
     alignas(64) std::vector<std::pair<std::shared_ptr<LogSink>, utils::LogLevel>> sinks;    ///< Logging sinks with levels
     std::mutex sinkMutex;                                                                    ///< Mutex for sink operations
