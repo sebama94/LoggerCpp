@@ -3,34 +3,46 @@
 #include "loggerCpp/fileLogSink.hpp"
 #include "loggerCpp/dataBaseLogSink.hpp"
 #include "loggerCpp/networkLogSink.hpp"
+#ifdef __unix__
+#include "loggerCpp/sysLogSink.hpp"
+#endif
 
 #include <fstream>
 #include <vector>
 
-ConfigurationManager::ConfigurationManager(utils::LogLevel logLevel) {
+ConfigurationManager::ConfigurationManager() {
+    LoggingEngine& logger = LoggingEngine::getInstance();
+    #ifdef NDEBUG
+        logger.setLogLevel(utils::LogLevel::INFO);
+    #else
+        logger.setLogLevel(utils::LogLevel::DEBUG);
+    #endif
+}
+
+ConfigurationManager::ConfigurationManager(const utils::LogLevel& logLevel) {
     LoggingEngine& logger = LoggingEngine::getInstance();
     logger.setLogLevel(logLevel);
 }
 
-void ConfigurationManager::applyConsoleSink(const utils::LogLevel level) {
+void ConfigurationManager::applyConsoleSink(const utils::LogLevel& level) {
     LoggingEngine& logger = LoggingEngine::getInstance();
     logger.addSink(std::make_shared<ConsoleLogSink>(), level);
 }
 
-void ConfigurationManager::applyConsoleSink(const utils::LogLevel level1, const utils::LogLevel level2) {
+void ConfigurationManager::applyConsoleSink(const utils::LogLevel& level1, const utils::LogLevel& level2) {
     LoggingEngine& logger = LoggingEngine::getInstance();
     logger.addSink(std::make_shared<ConsoleLogSink>(), level1);
     logger.addSink(std::make_shared<ConsoleLogSink>(), level2);
 }
 
-void ConfigurationManager::applyConsoleSink(const utils::LogLevel level1, const utils::LogLevel level2, const utils::LogLevel level3) {
+void ConfigurationManager::applyConsoleSink(const utils::LogLevel& level1, const utils::LogLevel& level2, const utils::LogLevel& level3) {
     LoggingEngine& logger = LoggingEngine::getInstance();
     logger.addSink(std::make_shared<ConsoleLogSink>(), level1);
     logger.addSink(std::make_shared<ConsoleLogSink>(), level2);
     logger.addSink(std::make_shared<ConsoleLogSink>(), level3);
 }
 
-void ConfigurationManager::applyConsoleSink(const utils::LogLevel level1, const utils::LogLevel level2, const utils::LogLevel level3, const utils::LogLevel level4) {
+void ConfigurationManager::applyConsoleSink(const utils::LogLevel& level1, const utils::LogLevel& level2, const utils::LogLevel& level3, const utils::LogLevel& level4) {
     LoggingEngine& logger = LoggingEngine::getInstance();
     logger.addSink(std::make_shared<ConsoleLogSink>(), level1);
     logger.addSink(std::make_shared<ConsoleLogSink>(), level2);
@@ -38,7 +50,7 @@ void ConfigurationManager::applyConsoleSink(const utils::LogLevel level1, const 
     logger.addSink(std::make_shared<ConsoleLogSink>(), level4);
 }
 
-void ConfigurationManager::applyConsoleSink(const utils::LogLevel level1, const utils::LogLevel level2, const utils::LogLevel level3, const utils::LogLevel level4, const utils::LogLevel level5) {
+void ConfigurationManager::applyConsoleSink(const utils::LogLevel& level1, const utils::LogLevel& level2, const utils::LogLevel& level3, const utils::LogLevel& level4, const utils::LogLevel& level5) {
     LoggingEngine& logger = LoggingEngine::getInstance();
     logger.addSink(std::make_shared<ConsoleLogSink>(), level1);
     logger.addSink(std::make_shared<ConsoleLogSink>(), level2);
@@ -47,25 +59,25 @@ void ConfigurationManager::applyConsoleSink(const utils::LogLevel level1, const 
     logger.addSink(std::make_shared<ConsoleLogSink>(), level5);
 }
 
-void ConfigurationManager::applyFileSink(const utils::LogLevel level, const std::string_view& filename) {  
+void ConfigurationManager::applyFileSink(const utils::LogLevel& level, const std::string_view& filename) {  
     LoggingEngine& logger = LoggingEngine::getInstance();
     logger.addSink(std::make_shared<FileLogSink>(filename), level);
 }
 
-void ConfigurationManager::applyFileSink(const utils::LogLevel level1, const utils::LogLevel level2, const std::string_view& filename) {
+void ConfigurationManager::applyFileSink(const utils::LogLevel& level1, const utils::LogLevel& level2, const std::string_view& filename) {
     LoggingEngine& logger = LoggingEngine::getInstance();
     logger.addSink(std::make_shared<FileLogSink>(filename), level1);
     logger.addSink(std::make_shared<FileLogSink>(filename), level2);
 }
 
-void ConfigurationManager::applyFileSink(const utils::LogLevel level1, const utils::LogLevel level2, const utils::LogLevel level3, const std::string_view& filename) {
+void ConfigurationManager::applyFileSink(const utils::LogLevel& level1, const utils::LogLevel& level2, const utils::LogLevel& level3, const std::string_view& filename) {
     LoggingEngine& logger = LoggingEngine::getInstance();
     logger.addSink(std::make_shared<FileLogSink>(filename), level1);
     logger.addSink(std::make_shared<FileLogSink>(filename), level2);
     logger.addSink(std::make_shared<FileLogSink>(filename), level3);
 }
 
-void ConfigurationManager::applyFileSink(const utils::LogLevel level1, const utils::LogLevel level2, const utils::LogLevel level3, const utils::LogLevel level4, const std::string_view& filename) {    
+void ConfigurationManager::applyFileSink(const utils::LogLevel& level1, const utils::LogLevel& level2, const utils::LogLevel& level3, const utils::LogLevel& level4, const std::string_view& filename) {    
     LoggingEngine& logger = LoggingEngine::getInstance();
     logger.addSink(std::make_shared<FileLogSink>(filename), level1);
     logger.addSink(std::make_shared<FileLogSink>(filename), level2);
@@ -73,7 +85,7 @@ void ConfigurationManager::applyFileSink(const utils::LogLevel level1, const uti
     logger.addSink(std::make_shared<FileLogSink>(filename), level4);
 }
 
-void ConfigurationManager::applyFileSink(const utils::LogLevel level1, const utils::LogLevel level2, const utils::LogLevel level3, const utils::LogLevel level4, const utils::LogLevel level5, const std::string_view& filename) {
+void ConfigurationManager::applyFileSink(const utils::LogLevel& level1, const utils::LogLevel& level2, const utils::LogLevel& level3, const utils::LogLevel& level4, const utils::LogLevel& level5, const std::string_view& filename) {
     LoggingEngine& logger = LoggingEngine::getInstance();
     logger.addSink(std::make_shared<FileLogSink>(filename), level1);
     logger.addSink(std::make_shared<FileLogSink>(filename), level2);
@@ -82,25 +94,25 @@ void ConfigurationManager::applyFileSink(const utils::LogLevel level1, const uti
     logger.addSink(std::make_shared<FileLogSink>(filename), level5);
 }
 
-void ConfigurationManager::applyNetworkSink(const utils::LogLevel level, const std::string_view& url) {
+void ConfigurationManager::applyNetworkSink(const utils::LogLevel& level, const std::string_view& url) {
     LoggingEngine& logger = LoggingEngine::getInstance();
     logger.addSink(std::make_shared<NetworkLogSink>(url), level);
 }
 
-void ConfigurationManager::applyNetworkSink(const utils::LogLevel level1, const utils::LogLevel level2, const std::string_view& url) {
+void ConfigurationManager::applyNetworkSink(const utils::LogLevel& level1, const utils::LogLevel& level2, const std::string_view& url) {
     LoggingEngine& logger = LoggingEngine::getInstance();
     logger.addSink(std::make_shared<NetworkLogSink>(url), level1);
     logger.addSink(std::make_shared<NetworkLogSink>(url), level2);
 }
 
-void ConfigurationManager::applyNetworkSink(const utils::LogLevel level1, const utils::LogLevel level2, const utils::LogLevel level3, const std::string_view& url) { 
+void ConfigurationManager::applyNetworkSink(const utils::LogLevel& level1, const utils::LogLevel& level2, const utils::LogLevel& level3, const std::string_view& url) { 
     LoggingEngine& logger = LoggingEngine::getInstance();
     logger.addSink(std::make_shared<NetworkLogSink>(url), level1);
     logger.addSink(std::make_shared<NetworkLogSink>(url), level2);
     logger.addSink(std::make_shared<NetworkLogSink>(url), level3);
 }
 
-void ConfigurationManager::applyNetworkSink(const utils::LogLevel level1, const utils::LogLevel level2, const utils::LogLevel level3, const utils::LogLevel level4, const std::string_view& url) {          
+void ConfigurationManager::applyNetworkSink(const utils::LogLevel& level1, const utils::LogLevel& level2, const utils::LogLevel& level3, const utils::LogLevel& level4, const std::string_view& url) {          
     LoggingEngine& logger = LoggingEngine::getInstance();
     logger.addSink(std::make_shared<NetworkLogSink>(url), level1);
     logger.addSink(std::make_shared<NetworkLogSink>(url), level2);
@@ -108,7 +120,7 @@ void ConfigurationManager::applyNetworkSink(const utils::LogLevel level1, const 
     logger.addSink(std::make_shared<NetworkLogSink>(url), level4);
 }
 
-void ConfigurationManager::applyNetworkSink(const utils::LogLevel level1, const utils::LogLevel level2, const utils::LogLevel level3, const utils::LogLevel level4, const utils::LogLevel level5, const std::string_view& url) {
+void ConfigurationManager::applyNetworkSink(const utils::LogLevel& level1, const utils::LogLevel& level2, const utils::LogLevel& level3, const utils::LogLevel& level4, const utils::LogLevel& level5, const std::string_view& url) {
     LoggingEngine& logger = LoggingEngine::getInstance();
     logger.addSink(std::make_shared<NetworkLogSink>(url), level1);
     logger.addSink(std::make_shared<NetworkLogSink>(url), level2);
@@ -117,25 +129,25 @@ void ConfigurationManager::applyNetworkSink(const utils::LogLevel level1, const 
     logger.addSink(std::make_shared<NetworkLogSink>(url), level5);
 }
 
-void ConfigurationManager::applyDataBaseSink(const utils::LogLevel level, const std::string_view& database) {
+void ConfigurationManager::applyDataBaseSink(const utils::LogLevel& level, const std::string_view& database) {
     LoggingEngine& logger = LoggingEngine::getInstance();
     logger.addSink(std::make_shared<DataBaseLogSink>(database), level);
 }
 
-void ConfigurationManager::applyDataBaseSink(const utils::LogLevel level1, const utils::LogLevel level2, const std::string_view& database) {
+void ConfigurationManager::applyDataBaseSink(const utils::LogLevel& level1, const utils::LogLevel& level2, const std::string_view& database) {
     LoggingEngine& logger = LoggingEngine::getInstance();
     logger.addSink(std::make_shared<DataBaseLogSink>(database), level1);
     logger.addSink(std::make_shared<DataBaseLogSink>(database), level2);
 }
 
-void ConfigurationManager::applyDataBaseSink(const utils::LogLevel level1, const utils::LogLevel level2, const utils::LogLevel level3, const std::string_view& database) {
+void ConfigurationManager::applyDataBaseSink(const utils::LogLevel& level1, const utils::LogLevel& level2, const utils::LogLevel& level3, const std::string_view& database) {
     LoggingEngine& logger = LoggingEngine::getInstance();
     logger.addSink(std::make_shared<DataBaseLogSink>(database), level1);
     logger.addSink(std::make_shared<DataBaseLogSink>(database), level2);
     logger.addSink(std::make_shared<DataBaseLogSink>(database), level3);
 }
 
-void ConfigurationManager::applyDataBaseSink(const utils::LogLevel level1, const utils::LogLevel level2, const utils::LogLevel level3, const utils::LogLevel level4, const std::string_view& database) {
+void ConfigurationManager::applyDataBaseSink(const utils::LogLevel& level1, const utils::LogLevel& level2, const utils::LogLevel& level3, const utils::LogLevel& level4, const std::string_view& database) {
     LoggingEngine& logger = LoggingEngine::getInstance();
     logger.addSink(std::make_shared<DataBaseLogSink>(database), level1);
     logger.addSink(std::make_shared<DataBaseLogSink>(database), level2);
@@ -143,7 +155,7 @@ void ConfigurationManager::applyDataBaseSink(const utils::LogLevel level1, const
     logger.addSink(std::make_shared<DataBaseLogSink>(database), level4);
 }
 
-void ConfigurationManager::applyDataBaseSink(const utils::LogLevel level1, const utils::LogLevel level2, const utils::LogLevel level3, const utils::LogLevel level4, const utils::LogLevel level5, const std::string_view& database) {
+void ConfigurationManager::applyDataBaseSink(const utils::LogLevel& level1, const utils::LogLevel& level2, const utils::LogLevel& level3, const utils::LogLevel& level4, const utils::LogLevel& level5, const std::string_view& database) {
     LoggingEngine& logger = LoggingEngine::getInstance();
     logger.addSink(std::make_shared<DataBaseLogSink>(database), level1);
     logger.addSink(std::make_shared<DataBaseLogSink>(database), level2);
@@ -151,3 +163,40 @@ void ConfigurationManager::applyDataBaseSink(const utils::LogLevel level1, const
     logger.addSink(std::make_shared<DataBaseLogSink>(database), level4);
     logger.addSink(std::make_shared<DataBaseLogSink>(database), level5);
 }
+
+#ifdef __unix__
+void ConfigurationManager::applySysLogSink(const utils::LogLevel& level, const std::string_view& ident) {
+    LoggingEngine& logger = LoggingEngine::getInstance();
+    logger.addSink(std::make_shared<SysLogSink>(ident), level);
+}
+
+void ConfigurationManager::applySysLogSink(const utils::LogLevel& level1, const utils::LogLevel& level2, const std::string_view& ident) {
+    LoggingEngine& logger = LoggingEngine::getInstance();
+    logger.addSink(std::make_shared<SysLogSink>(ident), level1);
+    logger.addSink(std::make_shared<SysLogSink>(ident), level2);
+}   
+
+void ConfigurationManager::applySysLogSink(const utils::LogLevel& level1, const utils::LogLevel& level2, const utils::LogLevel& level3, const std::string_view& ident) {
+    LoggingEngine& logger = LoggingEngine::getInstance();
+    logger.addSink(std::make_shared<SysLogSink>(ident), level1);
+    logger.addSink(std::make_shared<SysLogSink>(ident), level2);
+    logger.addSink(std::make_shared<SysLogSink>(ident), level3);
+}
+
+void ConfigurationManager::applySysLogSink(const utils::LogLevel& level1, const utils::LogLevel& level2, const utils::LogLevel& level3, const utils::LogLevel& level4, const std::string_view& ident) {
+    LoggingEngine& logger = LoggingEngine::getInstance();
+    logger.addSink(std::make_shared<SysLogSink>(ident), level1);
+    logger.addSink(std::make_shared<SysLogSink>(ident), level2);
+    logger.addSink(std::make_shared<SysLogSink>(ident), level3);
+    logger.addSink(std::make_shared<SysLogSink>(ident), level4);
+}
+
+void ConfigurationManager::applySysLogSink(const utils::LogLevel& level1, const utils::LogLevel& level2, const utils::LogLevel& level3, const utils::LogLevel& level4, const utils::LogLevel& level5, const std::string_view& ident) {
+    LoggingEngine& logger = LoggingEngine::getInstance();
+    logger.addSink(std::make_shared<SysLogSink>(ident), level1);
+    logger.addSink(std::make_shared<SysLogSink>(ident), level2);
+    logger.addSink(std::make_shared<SysLogSink>(ident), level3);
+    logger.addSink(std::make_shared<SysLogSink>(ident), level4);
+    logger.addSink(std::make_shared<SysLogSink>(ident), level5);
+}
+#endif

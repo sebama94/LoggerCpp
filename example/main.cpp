@@ -35,14 +35,13 @@ int main() {
         std::signal(SIGTERM, signalHandler);
         std::signal(SIGINT, signalHandler);
         
-        #ifdef NDEBUG
-            ConfigurationManager configManager(utils::LogLevel::INFO); 
-        #else
-            ConfigurationManager configManager(utils::LogLevel::DEBUG); 
-        #endif
+        
+        ConfigurationManager configManager; 
+
 
         configManager.applyFileSink(utils::LogLevel::INFO, log_file_path);
         configManager.applyConsoleSink(utils::LogLevel::ERROR);
+        configManager.applySysLogSink(utils::LogLevel::ERROR, "loggerCppAPP");
         //
         LOG_DEBUG("Initializing application...");
         LOG_INFO("Application started successfully");
@@ -51,6 +50,7 @@ int main() {
         int a = 10;
         LOG_WARNING("Processing time exceeded 10 seconds: {}", a);
         std::vector<int> vec = {1, 2, 3, 4, 5};
+        std::this_thread::sleep_for(std::chrono::seconds(10));
         //LOG_ERROR("Failed to complete all tasks in time: {}", fmt::join(vec.begin(), vec.end(), ", "));
         LOG_CRITICAL("System resources critically low");
 
